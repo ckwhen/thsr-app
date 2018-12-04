@@ -1,3 +1,4 @@
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["render"] }] */
 import React, { Component } from 'react';
 
 class App extends Component {
