@@ -9,6 +9,7 @@
     "plugin:react/recommended"
   ],
   "rules": {
-    "arrow-body-style": ["error", "always"]
+    "arrow-body-style": ["error", "always"],
+    "no-tabs": 0
   }
 }
