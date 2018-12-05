@@ -31,6 +31,7 @@ module.exports = {
     port,
     contentBase: path.join(__dirname, '/'),
     compress: true,
+    historyApiFallback: true,
   },
   plugins: [
     new HtmlWebPackPlugin({
