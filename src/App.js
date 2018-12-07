@@ -1,6 +1,6 @@
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["render"] }] */
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Route, NavLink } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 import Index from './screens/Index';
@@ -11,17 +11,21 @@ class App extends Component {
     return (
       <Provider store={store}>
         <BrowserRouter basename="/">
-          <div>
-            <nav>
-              <ul>
-                <li>
-                  <Link to="/">Home</Link>
-                </li>
-                <li>
-                  <Link to="/timetable">Timetable</Link>
-                </li>
-              </ul>
-            </nav>
+          <div className="container">
+            <div className="row bottom-buffer">
+              <div className="col-12">
+                <nav>
+                  <ul className="nav nav-tabs">
+                    <li className="nav-item">
+                      <NavLink className="nav-link" activeClassName="active" exact to="/">Home</NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link" activeClassName="active" to="/timetable">Timetable</NavLink>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
 
             <Route path="/" exact component={Index} />
             <Route path="/timetable" component={Timetable} />

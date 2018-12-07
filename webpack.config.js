@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const host = 'localhost';
 const port = 8081;
@@ -23,7 +24,16 @@ module.exports = {
       {
         test: /\.html$/,
         use: 'html-loader',
-      }
+      },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          'css-loader',
+        ],
+      },
     ]
   },
   devServer: {
@@ -38,6 +48,10 @@ module.exports = {
       template: './src/index.html',
       filename: './index.html',
       inject: true,
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].[hash].css',
+      chunkFilename: '[id].[chunkhash].css'
     })
   ],
 };

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import Selector from '../../components/Selector';
 import {
   setOriginStation,
@@ -79,10 +81,11 @@ class Timetable extends Component {
       timetable,
     } = this.props;
     return (
-      <div>
-        <div>
+      <div className="row">
+        <div className="col-12">
           <form className="form-inline" onSubmit={this.handleSubmit}>
             <Selector
+              className="form-control mb-2 mr-sm-2"
               id="originStationID"
               name="originStationID"
               value={originStationID}
@@ -92,6 +95,7 @@ class Timetable extends Component {
               valueRenderer={option => option.stationID}
             />
             <Selector
+              className="form-control mb-2 mr-sm-2"
               id="destinationStationID"
               name="destinationStationID"
               value={destinationStationID}
@@ -100,10 +104,12 @@ class Timetable extends Component {
               labelRenderer={option => option.stationName.zhTw}
               valueRenderer={option => option.stationID}
             />
-            <button className="btn btn-primary mb-2" type="submit">Submit form</button>
+            <button className="btn btn-primary mb-2" type="submit">
+              <FontAwesomeIcon icon={faSearch} size="lg" />
+            </button>
           </form>
         </div>
-        <div>
+        <div className="col-12">
           <table className="table">
             <thead>
               <tr>
@@ -138,7 +144,13 @@ class Timetable extends Component {
                       <td>{totalTime}</td>
                       <td>
                         {fare}
-                        {isBusinessSeat && <span title={'此價格為商務車箱票價'}>i</span>}
+                        {isBusinessSeat && (
+                          <FontAwesomeIcon
+                            className="icon-tip"
+                            icon={faExclamationCircle}
+                            title="此價格為商務車箱票價"
+                          />
+                        )}
                       </td>
                     </tr>
                   );
