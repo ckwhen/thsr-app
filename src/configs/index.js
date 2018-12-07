@@ -1,5 +1,5 @@
-import url from './url';
+export const THSR_API_SERVER = 'https://ptx.transportdata.tw/MOTC/v2/Rail/THSR/';
 
 export default {
-  url,
+  THSR_API_SERVER,
 };
