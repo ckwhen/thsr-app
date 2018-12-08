@@ -1,0 +1,69 @@
+.message-modal {
+  position: fixed;
+  z-index: 16;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  -ms-overflow-x: hidden;
+  overflow-x: hidden;
+  -ms-overflow-y: auto;
+  overflow-y: auto;
+  background-color: rgba(0,0,0,.5);
+}
+
+.message-modal__dialog {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  transform: translate(-50%,-50%);
+  /* clear text blurry */
+  zoom: 100%;
+}
+
+.message-modal__content {
+  position: relative;
+  border-radius: 5px;
+  outline: 0;
+  background-color: #FFF;
+  box-shadow: 0 2px 4px rgba(0,0,0,.5);
+}
+
+.message-modal__header {
+  position: relative;
+  padding: 8px 25px;
+  border-bottom: 1px solid #CCC;
+  border-radius: 4px 4px 0px 0px;
+  background-color: #FFF;
+  cursor: default;
+}
+
+.message-modal__close {
+  position: absolute;
+  display: inline-block;
+  vertical-align: top;
+  top: 8px;
+  right: 25px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: transparent;
+  outline: 0;
+  line-height: 1;
+}
+
+.message-modal__body {
+  padding: 30px;
+  color: #333;
+}
+
+.message-modal__footer {
+  padding: 8px 11px;
+  border-top: 1px solid #CCC;
+  text-align: right;
+}
