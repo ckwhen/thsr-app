@@ -5,6 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import Selector from '../../components/Selector';
 import {
+  setMessage,
+  resetMessage,
+} from '../../reducers/messageReducer';
+import {
   setOriginStation,
   setDestinationStation,
   fetchStations,
@@ -32,6 +36,8 @@ const propTypes = {
     fare: PropTypes.number,
     isBusinessSeat: PropTypes.bool,
   })),
+  setMessage: PropTypes.func,
+  resetMessage: PropTypes.func,
 };
 
 const mapStateToProps = state => state.timetable;
@@ -40,6 +46,8 @@ const mapDispatchToProps = {
   setDestinationStation,
   fetchStations,
   loadTimetable,
+  setMessage,
+  resetMessage,
 };
 
 class Timetable extends Component {
@@ -61,7 +69,8 @@ class Timetable extends Component {
           this.props.setOriginStation(firstStation.stationID);
           this.props.setDestinationStation(firstStation.stationID);
         }
-      });
+      })
+      .catch(error => this.props.setMessage(error));
   }
 
   handleSubmit(event) {
@@ -70,7 +79,14 @@ class Timetable extends Component {
       originStationID,
       destinationStationID,
     } = this.props;
-    return this.props.loadTimetable(originStationID, destinationStationID);
+    if (originStationID === destinationStationID) {
+      return this.props.setMessage({
+        message: '起站與迄站不能設為相同',
+        onClose: this.props.resetMessage,
+      });
+    }
+    return this.props.loadTimetable(originStationID, destinationStationID)
+      .catch(error => this.props.setMessage(error));
   }
 
   render() {

@@ -1,39 +1,68 @@
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["render"] }] */
 import React, { Component } from 'react';
-import { BrowserRouter, Route, NavLink } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from './store';
+import PropTypes from 'prop-types';
+import { Route, NavLink, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Index from './screens/Index';
 import Timetable from './screens/Timetable';
+import MessageModal from './components/MesssageModal';
+import {
+  setMessage,
+  resetMessage,
+} from './reducers/messageReducer';
+
+const propTypes = {
+  message: PropTypes.object,
+  setMessage: PropTypes.func,
+  resetMessage: PropTypes.func,
+};
+
+const mapStateToProps = state => ({
+  message: state.message,
+});
+const mapDispatchToProps = {
+  setMessage,
+  resetMessage,
+};
 
 class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <BrowserRouter basename="/">
-          <div className="container">
-            <div className="row bottom-buffer">
-              <div className="col-12">
-                <nav>
-                  <ul className="nav nav-tabs">
-                    <li className="nav-item">
-                      <NavLink className="nav-link" activeClassName="active" exact to="/">Home</NavLink>
-                    </li>
-                    <li className="nav-item">
-                      <NavLink className="nav-link" activeClassName="active" to="/timetable">Timetable</NavLink>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-            </div>
+  static get propTypes() {
+    return propTypes;
+  }
 
-            <Route path="/" exact component={Index} />
-            <Route path="/timetable" component={Timetable} />
+  render() {
+    const {
+      message,
+    } = this.props;
+    return (
+      <div className="container">
+        <div className="row bottom-buffer">
+          <div className="col-12">
+            <nav>
+              <ul className="nav nav-tabs">
+                <li className="nav-item">
+                  <NavLink className="nav-link" activeClassName="active" exact to="/">Home</NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" activeClassName="active" to="/timetable">Timetable</NavLink>
+                </li>
+              </ul>
+            </nav>
           </div>
-        </BrowserRouter>
-      </Provider>
+        </div>
+
+        <Route path="/" exact component={Index} />
+        <Route path="/timetable" component={Timetable} />
+        {message && message.message && (
+          <MessageModal
+            title={message.title}
+            message={message.message}
+            onClose={message.onClose || this.props.resetMessage}
+          />
+        )}
+      </div>
     );
   }
 }
 
-export default App;
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
