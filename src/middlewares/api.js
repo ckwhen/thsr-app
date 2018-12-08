@@ -1,3 +1,4 @@
+/* eslint prefer-promise-reject-errors: 0 */
 import fetch from 'cross-fetch';
 import queryString from 'query-string';
 import { camelizeKeys, pascalizeKeys } from 'humps';
@@ -28,12 +29,24 @@ function callApi({
 
   return fetch(fullUrl, fetchOptions)
     .then((response) => {
-      if (response.ok) {
-        return response.json();
+      if (!response.ok) {
+        return {
+          json: {
+            status: response.status,
+          },
+          response,
+        };
       }
-      return Promise.reject(response);
+      return response.json().then(json => ({ json, response }));
     })
-    .then(response => camelizeKeys(response));
+    .then(({ json, response }) => {
+      if (!response.ok) {
+        return Promise.reject({
+          message: response.statusText,
+        });
+      }
+      return camelizeKeys(json);
+    });
 }
 
 export default () => next => (action) => {
