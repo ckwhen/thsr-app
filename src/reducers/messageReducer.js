@@ -1,12 +1,11 @@
 const PATH = 'thsr-app/message/';
-const SET_MESSAGE = `${PATH}SET_MESSAGE`;
-const RESET_MESSAGE = `${PATH}RESET_MESSAGE`;
+export const SET_MESSAGE = `${PATH}SET_MESSAGE`;
+export const RESET_MESSAGE = `${PATH}RESET_MESSAGE`;
 
 export function setMessage({
   title,
   message,
   onClose,
-  onCancel,
 } = {}) {
   return {
     type: SET_MESSAGE,
@@ -14,7 +13,6 @@ export function setMessage({
       title,
       message,
       onClose,
-      onCancel,
     },
   };
 }
@@ -28,7 +26,6 @@ const initialState = {
   title: '',
   message: '',
   onClose: undefined,
-  onCancel: undefined,
 };
 export default function reducer(state = initialState, action) {
   switch (action.type) {
