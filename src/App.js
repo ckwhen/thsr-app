@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route, NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Index from './screens/Index';
-import Timetable from './screens/Timetable';
+import Loadable from 'react-loadable';
+import Loading from './components/Loading';
 import MessageModal from './components/MesssageModal';
 import {
   setMessage,
@@ -24,6 +24,15 @@ const mapDispatchToProps = {
   setMessage,
   resetMessage,
 };
+
+const LoadableIndex = Loadable({
+  loader: () => import('./screens/Index'),
+  loading: Loading,
+});
+const LoadableTimetable = Loadable({
+  loader: () => import('./screens/Timetable'),
+  loading: Loading,
+});
 
 class App extends Component {
   static get propTypes() {
@@ -51,8 +60,8 @@ class App extends Component {
           </div>
         </div>
 
-        <Route path="/" exact component={Index} />
-        <Route path="/timetable" component={Timetable} />
+        <Route path="/" exact component={LoadableIndex} />
+        <Route path="/timetable" component={LoadableTimetable} />
         {message && message.message && (
           <MessageModal
             title={message.title}

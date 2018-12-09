@@ -25,7 +25,9 @@ const propTypes = {
   originStationID: PropTypes.string,
   destinationStationID: PropTypes.string,
   trainDate: PropTypes.any,
+  isStationsFetched: PropTypes.bool,
   stations: PropTypes.array,
+  isTimetableFetching: PropTypes.bool,
   timetable: PropTypes.arrayOf(PropTypes.shape({
     trainNo: PropTypes.string,
     trainDate: PropTypes.string,
@@ -40,6 +42,7 @@ const propTypes = {
   })),
   setMessage: PropTypes.func,
   resetMessage: PropTypes.func,
+  location: PropTypes.object,
 };
 
 const mapStateToProps = state => state.timetable;
@@ -56,7 +59,7 @@ class Timetable extends Component {
   constructor() {
     super();
     this.state = {
-      timetableId: uuidv4(),
+      dataId: uuidv4(),
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -91,7 +94,7 @@ class Timetable extends Component {
       });
     }
     return this.props.loadTimetable(originStationID, destinationStationID)
-      .then(() => this.setState({ timetableId: uuidv4() }))
+      .then(() => this.setState({ dataId: uuidv4() }))
       .catch(error => this.props.setMessage(error));
   }
 
@@ -101,6 +104,8 @@ class Timetable extends Component {
       destinationStationID,
       stations,
       timetable,
+      isStationsFetched,
+      isTimetableFetching,
     } = this.props;
     return (
       <div className="row">
@@ -115,6 +120,7 @@ class Timetable extends Component {
               onChange={event => this.props.setOriginStation(event.target.value)}
               labelRenderer={option => option.stationName.zhTw}
               valueRenderer={option => option.stationID}
+              disabled={isTimetableFetching || !isStationsFetched}
             />
             <Selector
               className="form-control mb-2 mr-sm-2"
@@ -125,15 +131,21 @@ class Timetable extends Component {
               onChange={event => this.props.setDestinationStation(event.target.value)}
               labelRenderer={option => option.stationName.zhTw}
               valueRenderer={option => option.stationID}
+              disabled={isTimetableFetching || !isStationsFetched}
             />
-            <button className="btn btn-primary mb-2" type="submit">
+            <button
+              className="btn btn-primary mb-2"
+              type="submit"
+              disabled={isTimetableFetching || !isStationsFetched}
+            >
               <FontAwesomeIcon icon={faSearch} size="lg" />
             </button>
           </form>
         </div>
         <div className="col-12">
           <DataTable
-            timetableId={this.state.timetableId}
+            isLoading={isTimetableFetching}
+            dataId={this.state.dataId}
             data={timetable}
             emptyText="查無資料"
             columnMeta={[

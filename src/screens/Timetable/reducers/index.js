@@ -42,6 +42,7 @@ const initialState = {
   isStationsFetched: false,
   stations: [],
   isTimetableFetched: false,
+  isTimetableFetching: false,
   timetable: [],
 };
 export default function reducer(state = initialState, action) {
@@ -61,15 +62,18 @@ export default function reducer(state = initialState, action) {
       });
     case LOAD_TIMETABLE_REQUEST:
       return Object.assign({}, state, {
+        isTimetableFetching: true,
         isTimetableFetched: false,
       });
     case LOAD_TIMETABLE_SUCCESS:
       return Object.assign({}, state, {
+        isTimetableFetching: false,
         isTimetableFetched: true,
         timetable: action.payload,
       });
     case LOAD_TIMETABLE_FAILURE:
       return Object.assign({}, state, {
+        isTimetableFetching: false,
         isTimetableFetched: true,
       });
     case SET_ORIGIN_STATION:

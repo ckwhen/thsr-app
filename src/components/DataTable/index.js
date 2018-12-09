@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Loading from '../Loading';
 import DataTableHeader from './DataTableHeader';
 
 const propTypes = {
-  timetableId: PropTypes.string.isRequired,
+  dataId: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   columnMeta: PropTypes.arrayOf(PropTypes.shape({
     columnName: PropTypes.string.isRequired,
@@ -12,6 +13,7 @@ const propTypes = {
     sortable: PropTypes.bool,
   })).isRequired,
   emptyText: PropTypes.string,
+  isLoading: PropTypes.bool,
 };
 
 class DataTable extends Component {
@@ -19,7 +21,7 @@ class DataTable extends Component {
     super(props);
     this.state = {
       data: props.data,
-      prevTimetableId: props.timetableId,
+      prevDataId: props.dataId,
     };
     this.handleColumnSort = this.handleColumnSort.bind(this);
   }
@@ -29,9 +31,9 @@ class DataTable extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.timetableId !== state.prevTimetableId) {
+    if (props.dataId !== state.prevDataId) {
       return {
-        prevTimetableId: props.timetableId,
+        prevDataId: props.dataId,
         data: props.data,
       };
     }
@@ -55,6 +57,7 @@ class DataTable extends Component {
     const {
       columnMeta,
       emptyText,
+      isLoading,
     } = this.props;
     const { data } = this.state;
 
@@ -73,7 +76,16 @@ class DataTable extends Component {
         </thead>
         <tbody>
           {(() => {
-            if (!data.length) {
+            if (isLoading) {
+              return (
+                <tr>
+                  <td colSpan={columnMeta.length} className="text-center">
+                    <Loading size="lg" />
+                  </td>
+                </tr>
+              );
+            }
+            if (!data.length && !isLoading) {
               return (
                 <tr>
                   <td colSpan={columnMeta.length} className="text-center">
