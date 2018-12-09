@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import uuidv4 from 'uuid/v4';
 import Selector from '../../components/Selector';
+import DataTable from '../../components/DataTable';
 import {
   setMessage,
   resetMessage,
@@ -53,6 +55,9 @@ const mapDispatchToProps = {
 class Timetable extends Component {
   constructor() {
     super();
+    this.state = {
+      timetableId: uuidv4(),
+    };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -86,6 +91,7 @@ class Timetable extends Component {
       });
     }
     return this.props.loadTimetable(originStationID, destinationStationID)
+      .then(() => this.setState({ timetableId: uuidv4() }))
       .catch(error => this.props.setMessage(error));
   }
 
@@ -126,54 +132,53 @@ class Timetable extends Component {
           </form>
         </div>
         <div className="col-12">
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">起站名稱</th>
-                <th scope="col">起站發車時間</th>
-                <th scope="col">訖站名稱</th>
-                <th scope="col">訖站到達時間</th>
-                <th scope="col">總共乘車時間</th>
-                <th scope="col">票價</th>
-              </tr>
-            </thead>
-            <tbody>
+          <DataTable
+            timetableId={this.state.timetableId}
+            data={timetable}
+            emptyText="查無資料"
+            columnMeta={[
               {
-                timetable && timetable.map((time) => {
-                  const {
-                    trainNo,
-                    trainDate,
-                    originStationName,
-                    originDepartureTime,
-                    destinationStationName,
-                    destinationArrivalTime,
-                    totalTime,
-                    fare,
-                    isBusinessSeat,
-                  } = time;
-                  return (
-                    <tr key={`${trainNo}-${trainDate}-${originDepartureTime}`}>
-                      <td>{originStationName.zhTw}</td>
-                      <td>{originDepartureTime}</td>
-                      <td>{destinationStationName.zhTw}</td>
-                      <td>{destinationArrivalTime}</td>
-                      <td>{totalTime}</td>
-                      <td>
-                        {fare}
-                        {isBusinessSeat && (
-                          <FontAwesomeIcon
-                            className="icon-tip"
-                            icon={faExclamationCircle}
-                            title="此價格為商務車箱票價"
-                          />
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })
-              }
-            </tbody>
-          </table>
+                columnName: 'originStationName',
+                displayName: '起站名稱',
+                customComponent: ({ data } = {}) => <div>{data.zhTw}</div>,
+              },
+              {
+                columnName: 'originDepartureTime',
+                displayName: '起站發車時間',
+                sortable: true,
+              },
+              {
+                columnName: 'destinationStationName',
+                displayName: '訖站名稱',
+                customComponent: ({ data } = {}) => <div>{data.zhTw}</div>,
+              },
+              {
+                columnName: 'destinationArrivalTime',
+                displayName: '訖站到達時間',
+              },
+              {
+                columnName: 'totalTime',
+                displayName: '總共乘車時間',
+                sortable: true,
+              },
+              {
+                columnName: 'fare',
+                displayName: '票價',
+                customComponent: ({ data, rowdata } = {}) => (
+                  <div>
+                    {data}
+                    {rowdata.isBusinessSeat && (
+                      <FontAwesomeIcon
+                        className="icon-tip"
+                        icon={faExclamationCircle}
+                        title="此價格為商務車箱票價"
+                      />
+                    )}
+                  </div>
+                ),
+              },
+            ]}
+          />
         </div>
       </div>
     );

@@ -262,7 +262,7 @@ export function loadTimetable(originStationID, destinationStationID) {
           type: LOAD_TIMETABLE_SUCCESS,
           payload: timetable,
         });
-        return Promise.resolve(response);
+        return Promise.resolve(timetable);
       })
       .catch((error) => {
         dispatch({ type: LOAD_TIMETABLE_FAILURE });
